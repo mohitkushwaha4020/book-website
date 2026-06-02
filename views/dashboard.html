@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Mohit Kushwaha</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar scrolled" id="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="nav-logo">Mohit <span>Kushwaha</span></a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/books">Books</a></li>
+      <li><a href="/dashboard" class="active">Dashboard</a></li>
+    </ul>
+    <div class="nav-actions">
+      <div class="nav-user-menu">
+        <div class="nav-avatar">M</div>
+        <div class="nav-dropdown">
+          <span class="nav-user-name" style="display:block;padding:8px 14px;font-size:0.85rem;font-weight:600;color:#333;border-bottom:1px solid #f0f0f0;margin-bottom:4px"></span>
+          <a href="/dashboard">📚 Dashboard</a>
+          <a href="/library">🗂 My Library</a>
+          <div class="divider"></div>
+          <a href="#" data-action="logout" style="color:#c62828">↩ Logout</a>
+        </div>
+      </div>
+      <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-nav" id="mobile-nav">
+  <a href="/">Home</a><a href="/books">Books</a><a href="/dashboard">Dashboard</a><a href="/library">My Library</a>
+  <div class="mobile-divider"></div>
+  <a href="#" data-action="logout">Logout</a>
+</div>
+
+<div class="dashboard-page">
+  <div class="dashboard-inner">
+
+    <div class="dashboard-header">
+      <h1>Welcome back, <span id="welcome-name" style="color:#c9a96e">Reader</span> 👋</h1>
+      <p>Your personal reading space</p>
+    </div>
+
+    <!-- Profile Card -->
+    <div style="background:#fff;border-radius:16px;padding:24px;border:1px solid #e8e8e8;display:flex;align-items:center;gap:20px;margin-bottom:28px;box-shadow:0 2px 8px rgba(0,0,0,0.05)">
+      <div id="user-avatar" style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#c9a96e,#a07840);color:#000;font-size:1.4rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">?</div>
+      <div>
+        <div id="user-name" style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:600;color:#0a0a0a"></div>
+        <div id="user-email" style="font-size:0.85rem;color:#888;margin-top:2px"></div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:10px">
+        <a href="/books" class="btn btn-primary btn-sm">Browse Books</a>
+        <a href="/library" class="btn btn-outline btn-sm">My Library</a>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-card-num" id="books-count">—</div>
+        <div class="stat-card-label">Books Owned</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-num" style="color:#c9a96e">∞</div>
+        <div class="stat-card-label">Online Access</div>
+      </div>
+    </div>
+
+    <!-- My Library -->
+    <div class="dashboard-section">
+      <div class="dashboard-section-header">
+        <h2>My Library</h2>
+        <a href="/library" class="btn btn-outline btn-sm">View All</a>
+      </div>
+      <div class="library-grid" id="library-grid">
+        <div class="skeleton" style="height:220px;border-radius:12px"></div>
+        <div class="skeleton" style="height:220px;border-radius:12px"></div>
+        <div class="skeleton" style="height:220px;border-radius:12px"></div>
+      </div>
+      <div id="library-empty" style="display:none;text-align:center;padding:40px 20px;background:#fff;border-radius:12px;border:1px solid #e8e8e8">
+        <div style="font-size:3rem;margin-bottom:12px">📚</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;color:#333;margin-bottom:8px">No books yet</h3>
+        <p style="font-size:0.88rem;color:#888;margin-bottom:20px">Browse and purchase books to start reading</p>
+        <a href="/books" class="btn btn-primary">Browse Books</a>
+      </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="dashboard-section">
+      <div class="dashboard-section-header">
+        <h2>Recent Orders</h2>
+      </div>
+      <div style="background:#fff;border-radius:12px;border:1px solid #e8e8e8;padding:20px">
+        <div id="orders-list"><div class="spinner"></div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast-container"></div>
+<script src="/js/dashboard.js"></script>
+</body>
+</html>

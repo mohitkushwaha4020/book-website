@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Books — Mohit Kushwaha</title>
+  <meta name="description" content="Browse all books by Mohit Kushwaha. Purchase and read instantly online.">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="nav-logo">Mohit <span>Kushwaha</span></a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/books" class="active">Books</a></li>
+      <li><a href="/#about">About</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="/login" class="btn btn-outline btn-sm nav-login-btn">Login</a>
+      <a href="/signup" class="btn btn-primary btn-sm nav-signup-btn">Sign Up</a>
+      <div class="nav-user-menu" style="display:none">
+        <div class="nav-avatar">M</div>
+        <div class="nav-dropdown">
+          <span class="nav-user-name" style="display:block;padding:8px 14px;font-size:0.85rem;font-weight:600;color:#333;border-bottom:1px solid #f0f0f0;margin-bottom:4px"></span>
+          <a href="/dashboard">📚 Dashboard</a>
+          <a href="/library">🗂 My Library</a>
+          <div class="divider"></div>
+          <a href="#" data-action="logout" style="color:#c62828">↩ Logout</a>
+        </div>
+      </div>
+      <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-nav" id="mobile-nav">
+  <a href="/">Home</a><a href="/books">Books</a><a href="/#about">About</a><a href="/contact">Contact</a>
+  <div class="mobile-divider"></div>
+  <div class="mobile-auth-links"><a href="/login">Login</a><a href="/signup">Sign Up</a></div>
+  <div class="mobile-user-links" style="display:none"><a href="/dashboard">Dashboard</a><a href="/library">My Library</a><a href="#" data-action="logout">Logout</a></div>
+</div>
+
+<div class="page-hero">
+  <h1>All Books</h1>
+  <p>Every story is a world waiting to be explored</p>
+</div>
+
+<section class="section" style="background:#fff">
+  <div class="section-inner">
+    <div class="search-bar-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="search-bar" id="book-search" placeholder="Search books, categories...">
+    </div>
+    <div class="filter-row">
+      <button class="filter-btn active" data-category="all">All</button>
+      <button class="filter-btn" data-category="Romance">Romance</button>
+      <button class="filter-btn" data-category="Self-Help">Self-Help</button>
+      <button class="filter-btn" data-category="Drama">Drama</button>
+      <button class="filter-btn" data-category="Fiction">Fiction</button>
+    </div>
+    <div class="books-grid" id="books-grid">
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
+    </div>
+  </div>
+</section>
+
+<footer style="background:#0a0a0a;color:rgba(255,255,255,0.5);padding:28px clamp(16px,5vw,60px);text-align:center;font-size:0.85rem">
+  © 2024 Mohit Kushwaha — <a href="/" style="color:#c9a96e">Home</a> · <a href="/contact" style="color:#c9a96e">Contact</a>
+</footer>
+
+<div class="toast-container"></div>
+<script src="/js/main.js"></script>
+</body>
+</html>

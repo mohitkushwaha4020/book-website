@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Reading — Mohit Kushwaha</title>
+  <link rel="stylesheet" href="/css/reader.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- TOP TOOLBAR -->
+<div class="reader-toolbar">
+  <div class="toolbar-left">
+    <a href="/library" class="toolbar-btn" title="Back to Library" style="text-decoration:none;font-size:1.1rem">←</a>
+  </div>
+
+  <div class="toolbar-center">
+    <span class="book-title-display" id="book-title-display">Loading...</span>
+  </div>
+
+  <div class="toolbar-right">
+    <!-- Zoom Out -->
+    <button class="toolbar-btn" id="zoom-out" title="Zoom Out (-)">−</button>
+    <span class="zoom-display" id="zoom-display">100%</span>
+    <!-- Zoom In -->
+    <button class="toolbar-btn" id="zoom-in" title="Zoom In (+)">+</button>
+    <!-- Fit -->
+    <button class="toolbar-btn" id="zoom-fit" title="Fit to Width">⊡</button>
+    <!-- Dark Mode -->
+    <button class="toolbar-btn" id="dark-mode-btn" title="Toggle Dark Mode (D)">🌙</button>
+    <!-- Bookmarks -->
+    <button class="toolbar-btn" id="bookmark-toggle" title="Bookmarks (B)">🔖</button>
+    <!-- Fullscreen -->
+    <button class="toolbar-btn" id="fullscreen-btn" title="Fullscreen (F)">⛶</button>
+  </div>
+</div>
+
+<!-- READING PROGRESS BAR -->
+<div class="reading-progress-bar" id="progress-bar" style="width:0%"></div>
+
+<!-- MAIN READING AREA -->
+<div class="reader-main" id="reader-main">
+
+  <!-- Loading State -->
+  <div class="reader-loading" id="reader-loading">
+    <div class="reader-spinner"></div>
+    <span>Loading your book...</span>
+  </div>
+
+  <!-- Error State -->
+  <div class="reader-error" id="reader-error" style="display:none"></div>
+
+  <!-- PDF Canvas -->
+  <div class="pdf-canvas-wrap" id="canvas-wrap">
+    <canvas id="pdf-canvas"></canvas>
+  </div>
+
+</div>
+
+<!-- BOTTOM NAV BAR -->
+<div class="reader-bottom-bar">
+  <button class="nav-btn" id="prev-btn" title="Previous Page (←)" disabled>‹</button>
+
+  <div class="page-counter-box">
+    <input type="number" class="page-input" id="page-input" value="1" min="1">
+    <span class="page-sep">/</span>
+    <span class="total-pages-display" id="total-pages">—</span>
+  </div>
+
+  <button class="nav-btn" id="next-btn" title="Next Page (→)" disabled>›</button>
+</div>
+
+<!-- BOOKMARK PANEL -->
+<div class="bookmark-panel" id="bookmark-panel">
+  <div class="bookmark-panel-header">
+    <h3>🔖 Bookmarks</h3>
+    <button class="toolbar-btn" id="close-bookmark-panel" style="width:28px;height:28px;font-size:0.8rem">✕</button>
+  </div>
+  <button class="add-bookmark-btn" id="add-bookmark-btn">+ Bookmark Current Page</button>
+  <div id="bookmark-list">
+    <p class="bookmark-empty">No bookmarks yet.</p>
+  </div>
+</div>
+
+<!-- PDF.js from CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="/js/reader.js"></script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mohit Kushwaha — Official Bookstore</title>
+  <meta name="description" content="Read premium books by author Mohit Kushwaha. Purchase and read instantly inside your browser.">
+  <meta property="og:title" content="Mohit Kushwaha — Official Bookstore">
+  <meta property="og:description" content="Stories That Stay With You Forever. Read online, anytime.">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="nav-logo">Mohit <span>Kushwaha</span></a>
+    <ul class="nav-links">
+      <li><a href="/" class="active">Home</a></li>
+      <li><a href="/books">Books</a></li>
+      <li><a href="/#about">About</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="/login" class="btn btn-outline btn-sm nav-login-btn">Login</a>
+      <a href="/signup" class="btn btn-primary btn-sm nav-signup-btn">Sign Up</a>
+      <div class="nav-user-menu" style="display:none">
+        <div class="nav-avatar" title="My Account">M</div>
+        <div class="nav-dropdown">
+          <span class="nav-user-name" style="display:block;padding:8px 14px;font-size:0.85rem;font-weight:600;color:#333;border-bottom:1px solid #f0f0f0;margin-bottom:4px"></span>
+          <a href="/dashboard">📚 Dashboard</a>
+          <a href="/library">🗂 My Library</a>
+          <div class="divider"></div>
+          <a href="#" data-action="logout" style="color:#c62828">↩ Logout</a>
+        </div>
+      </div>
+      <div class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobile-nav">
+  <a href="/">Home</a>
+  <a href="/books">Books</a>
+  <a href="/#about">About</a>
+  <a href="/contact">Contact</a>
+  <div class="mobile-divider"></div>
+  <div class="mobile-auth-links">
+    <a href="/login">Login</a>
+    <a href="/signup">Sign Up</a>
+  </div>
+  <div class="mobile-user-links" style="display:none">
+    <a href="/dashboard">Dashboard</a>
+    <a href="/library">My Library</a>
+    <a href="#" data-action="logout">Logout</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Official Bookstore</div>
+      <h1>Stories That <em>Stay</em> With You Forever</h1>
+      <p class="hero-sub">Discover heartfelt, deeply moving stories by Mohit Kushwaha. Purchase a book and read it instantly inside your browser — anytime, anywhere.</p>
+      <div class="hero-actions">
+        <a href="/books" class="btn btn-primary btn-lg">Explore Books</a>
+        <a href="/signup" class="btn btn-outline btn-lg" style="color:#fff;border-color:rgba(255,255,255,0.3)">Start Reading</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-num">4</span>
+          <span class="hero-stat-label">Published Books</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-num">1000+</span>
+          <span class="hero-stat-label">Happy Readers</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-num">∞</span>
+          <span class="hero-stat-label">Stories to Tell</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-book">
+      <div class="hero-book-card">
+        <div class="hero-book-spine"></div>
+        <img src="/images/placeholder.svg" alt="Featured Book" id="hero-book-img">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED BOOKS -->
+<section class="section" id="books">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-eyebrow">Collection</span>
+      <h2 class="section-title">Featured Books</h2>
+      <p class="section-sub">Every story is a journey. Choose yours and begin reading today.</p>
+    </div>
+    <div class="books-grid" id="featured-books-grid">
+      <!-- Loaded by JS -->
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
+    </div>
+    <div style="text-align:center;margin-top:40px">
+      <a href="/books" class="btn btn-outline btn-lg">View All Books</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section testimonials-section">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-eyebrow">Reader Love</span>
+      <h2 class="section-title">What Readers Say</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"1000 Miles of Love made me cry and smile on the same page. Mohit's writing feels like a warm hug. I read it in one sitting and immediately went back to page one."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">P</div>
+          <div>
+            <div class="testimonial-name">Priya Sharma</div>
+            <div class="testimonial-location">Mumbai</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"'The Art of Loneliness' changed how I see myself. It's not just a book — it's therapy. Every chapter felt like it was written specifically for me. Absolutely transformative."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">R</div>
+          <div>
+            <div class="testimonial-name">Rahul Verma</div>
+            <div class="testimonial-location">Delhi</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"'When Trust Breaks' is painfully real. Mohit captures emotions so authentically that you forget you're reading fiction. One of the best books I've read this year."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">A</div>
+          <div>
+            <div class="testimonial-name">Ananya Singh</div>
+            <div class="testimonial-location">Bangalore</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section about-section" id="about">
+  <div class="section-inner">
+    <div class="about-inner">
+      <div class="about-img-wrap">
+        <div class="about-img" style="background:linear-gradient(135deg,#1a1a1a,#2a2a2a);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:5rem;color:rgba(201,169,110,0.3)">MK</div>
+      </div>
+      <div class="about-content">
+        <span class="section-eyebrow">About the Author</span>
+        <h2>Mohit Kushwaha</h2>
+        <p>Mohit Kushwaha is a storyteller at heart — someone who believes that words, when written from the soul, have the power to heal, connect, and transform.</p>
+        <p>His books explore the raw, unfiltered emotions of love, loss, longing, and self-discovery. From sweeping romance to deeply introspective self-help, each of his works is a testament to the human experience in all its complexity.</p>
+        <p>Born with an instinct to observe the quieter moments of life, Mohit writes the stories that live in the spaces between — the unsaid words, the half-finished feelings, and the love that stays long after the person is gone.</p>
+        <div style="margin-top:32px;display:flex;gap:12px;flex-wrap:wrap">
+          <a href="/books" class="btn btn-primary">Read His Books</a>
+          <a href="/contact" class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,0.3)">Get in Touch</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter-section">
+  <div class="newsletter-inner">
+    <h2>Stay in the Story</h2>
+    <p>Get notified when new books drop, behind-the-scenes updates, and exclusive reader offers.</p>
+    <form class="newsletter-form" id="newsletter-form" onsubmit="handleNewsletter(event)">
+      <input type="email" class="form-control" placeholder="Your email address" required>
+      <button type="submit" class="btn btn-dark">Subscribe</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>Mohit <span>Kushwaha</span></h3>
+        <p>Premium stories written for the soul. Read online, anytime, in your personal library.</p>
+        <div class="footer-social">
+          <a href="https://instagram.com/mohitkushwaha" class="social-icon" target="_blank" title="Instagram">📸</a>
+          <a href="https://wa.me/919999999999" class="social-icon" target="_blank" title="WhatsApp">💬</a>
+          <a href="mailto:hello@mohitkushwaha.com" class="social-icon" title="Email">✉</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Books</h4>
+        <ul>
+          <li><a href="/books">All Books</a></li>
+          <li><a href="/books?category=Romance">Romance</a></li>
+          <li><a href="/books?category=Self-Help">Self-Help</a></li>
+          <li><a href="/books?category=Drama">Drama</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Account</h4>
+        <ul>
+          <li><a href="/login">Login</a></li>
+          <li><a href="/signup">Sign Up</a></li>
+          <li><a href="/dashboard">Dashboard</a></li>
+          <li><a href="/library">My Library</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="https://instagram.com/mohitkushwaha" target="_blank">Instagram</a></li>
+          <li><a href="/payment">How to Buy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 Mohit Kushwaha. All rights reserved.</span>
+      <span>Made with ♥ for readers</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast-container"></div>
+
+<script src="/js/main.js"></script>
+<script>
+function handleNewsletter(e) {
+  e.preventDefault();
+  if (typeof showToast === 'function') showToast("You're subscribed! We'll be in touch soon.", 'success');
+  e.target.reset();
+}
+</script>
+</body>
+</html>

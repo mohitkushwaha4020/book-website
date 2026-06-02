@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Books Management — Admin</title>
+  <link rel="stylesheet" href="/css/admin.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="admin-layout">
+
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">Mohit <span>Kushwaha</span></div>
+      <div class="sidebar-sub">Admin Panel</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Overview</div>
+      <a href="/admin" class="sidebar-link"><span class="icon">📊</span> Dashboard</a>
+      <div class="nav-section-label">Management</div>
+      <a href="/admin/orders" class="sidebar-link"><span class="icon">📦</span> Orders</a>
+      <a href="/admin/books" class="sidebar-link active"><span class="icon">📚</span> Books</a>
+      <a href="/admin/users" class="sidebar-link"><span class="icon">👥</span> Users</a>
+      <div class="nav-section-label">Store</div>
+      <a href="/" class="sidebar-link" target="_blank"><span class="icon">🏪</span> View Store</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar">A</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Admin</div>
+          <div class="sidebar-user-role">Administrator</div>
+        </div>
+        <button class="sidebar-logout" data-action="logout">↩</button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button id="sidebar-toggle" class="btn btn-outline btn-sm" style="display:none">☰</button>
+        <span class="admin-topbar-title">Books Management</span>
+      </div>
+      <div class="admin-topbar-right">
+        <button class="btn btn-gold btn-sm" onclick="openAddBook()">+ Add New Book</button>
+      </div>
+    </div>
+
+    <div class="admin-content">
+      <div class="admin-table-card">
+        <div class="table-header">
+          <h2>All Books</h2>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Book</th>
+                <th>Author</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Pages</th>
+                <th>PDF</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="books-tbody">
+              <tr><td colspan="7" style="text-align:center;padding:40px;color:#888">Loading books...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- BOOK MODAL -->
+<div class="modal-overlay" id="book-modal" style="display:none" onclick="if(event.target===this)closeBookModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeBookModal()">×</button>
+    <h3 class="modal-title" id="book-form-title">Add New Book</h3>
+
+    <form id="book-form" enctype="multipart/form-data">
+      <input type="hidden" id="book-id">
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="form-group" style="grid-column:1/-1">
+          <label class="form-label">Title *</label>
+          <input type="text" name="title" id="book-title-input" class="form-control" placeholder="Book title" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Author</label>
+          <input type="text" name="author" id="book-author-input" class="form-control" value="Mohit Kushwaha">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Price (₹) *</label>
+          <input type="number" name="price" id="book-price-input" class="form-control" placeholder="199" min="1" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Pages</label>
+          <input type="number" name="pages" id="book-pages-input" class="form-control" placeholder="280">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select name="category" id="book-category-input" class="form-control">
+            <option value="">Select category</option>
+            <option value="Romance">Romance</option>
+            <option value="Self-Help">Self-Help</option>
+            <option value="Drama">Drama</option>
+            <option value="Fiction">Fiction</option>
+            <option value="Romance / Fiction">Romance / Fiction</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select name="is_active" id="book-active-input" class="form-control">
+            <option value="1">Active</option>
+            <option value="0">Inactive</option>
+          </select>
+        </div>
+        <div class="form-group" style="grid-column:1/-1">
+          <label class="form-label">Description</label>
+          <textarea name="description" id="book-desc-input" class="form-control" rows="3" placeholder="Book description..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Cover Image</label>
+          <label class="upload-field">
+            <input type="file" name="cover" accept="image/*" style="display:none" onchange="this.parentElement.querySelector('span').textContent = this.files[0]?.name || 'Click to upload cover'">
+            <span>Click to upload cover</span>
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="form-label">PDF File</label>
+          <label class="upload-field">
+            <input type="file" name="pdf" accept="application/pdf" style="display:none" onchange="this.parentElement.querySelector('span').textContent = this.files[0]?.name || 'Click to upload PDF'">
+            <span>Click to upload PDF</span>
+          </label>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:8px">
+        <button type="submit" class="btn btn-gold" style="flex:1">Save Book</button>
+        <button type="button" class="btn btn-outline" onclick="closeBookModal()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast-container"></div>
+<script src="/js/admin.js"></script>
+<script>
+if (window.innerWidth <= 768) document.getElementById('sidebar-toggle').style.display = 'inline-flex';
+window.addEventListener('resize', () => {
+  document.getElementById('sidebar-toggle').style.display = window.innerWidth <= 768 ? 'inline-flex' : 'none';
+});
+</script>
+</body>
+</html>

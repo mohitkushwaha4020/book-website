@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — Mohit Kushwaha</title>
+  <link rel="stylesheet" href="/css/admin.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="admin-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">Mohit <span>Kushwaha</span></div>
+      <div class="sidebar-sub">Admin Panel</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Overview</div>
+      <a href="/admin" class="sidebar-link active"><span class="icon">📊</span> Dashboard</a>
+      <div class="nav-section-label">Management</div>
+      <a href="/admin/orders" class="sidebar-link"><span class="icon">📦</span> Orders</a>
+      <a href="/admin/books" class="sidebar-link"><span class="icon">📚</span> Books</a>
+      <a href="/admin/users" class="sidebar-link"><span class="icon">👥</span> Users</a>
+      <div class="nav-section-label">Store</div>
+      <a href="/" class="sidebar-link" target="_blank"><span class="icon">🏪</span> View Store</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar">A</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Admin</div>
+          <div class="sidebar-user-role">Administrator</div>
+        </div>
+        <button class="sidebar-logout" data-action="logout" title="Logout">↩</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button id="sidebar-toggle" class="btn btn-outline btn-sm" style="display:none">☰</button>
+        <span class="admin-topbar-title">Dashboard Overview</span>
+      </div>
+      <div class="admin-topbar-right">
+        <span style="font-size:0.82rem;color:#888" id="current-date"></span>
+      </div>
+    </div>
+
+    <div class="admin-content">
+      <!-- Stats -->
+      <div class="admin-stats-grid">
+        <div class="admin-stat-card">
+          <div class="stat-header">
+            <div>
+              <div class="stat-num" id="stat-users">—</div>
+              <div class="stat-label">Total Users</div>
+            </div>
+            <div class="stat-icon blue">👥</div>
+          </div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="stat-header">
+            <div>
+              <div class="stat-num" id="stat-books">—</div>
+              <div class="stat-label">Total Books</div>
+            </div>
+            <div class="stat-icon gold">📚</div>
+          </div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="stat-header">
+            <div>
+              <div class="stat-num" id="stat-orders">—</div>
+              <div class="stat-label">Total Orders</div>
+            </div>
+            <div class="stat-icon green">📦</div>
+          </div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="stat-header">
+            <div>
+              <div class="stat-num" id="stat-pending" style="color:#e65100">—</div>
+              <div class="stat-label">Pending Review</div>
+            </div>
+            <div class="stat-icon orange">⏳</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Orders -->
+      <div class="admin-table-card">
+        <div class="table-header">
+          <h2>Recent Orders</h2>
+          <a href="/admin/orders" class="btn btn-outline btn-sm">View All</a>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th><th>User</th><th>Book</th><th>Amount</th><th>Date</th><th>Status</th><th>Screenshot</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="orders-tbody">
+              <tr><td colspan="8" style="text-align:center;padding:30px;color:#888">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast-container"></div>
+<script src="/js/admin.js"></script>
+<script>
+document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-IN', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+// Show mobile sidebar toggle on small screens
+if (window.innerWidth <= 768) document.getElementById('sidebar-toggle').style.display = 'inline-flex';
+window.addEventListener('resize', () => {
+  document.getElementById('sidebar-toggle').style.display = window.innerWidth <= 768 ? 'inline-flex' : 'none';
+});
+</script>
+</body>
+</html>

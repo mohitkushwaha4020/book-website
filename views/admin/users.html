@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Users — Admin</title>
+  <link rel="stylesheet" href="/css/admin.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="admin-layout">
+
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">Mohit <span>Kushwaha</span></div>
+      <div class="sidebar-sub">Admin Panel</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Overview</div>
+      <a href="/admin" class="sidebar-link"><span class="icon">📊</span> Dashboard</a>
+      <div class="nav-section-label">Management</div>
+      <a href="/admin/orders" class="sidebar-link"><span class="icon">📦</span> Orders</a>
+      <a href="/admin/books" class="sidebar-link"><span class="icon">📚</span> Books</a>
+      <a href="/admin/users" class="sidebar-link active"><span class="icon">👥</span> Users</a>
+      <div class="nav-section-label">Store</div>
+      <a href="/" class="sidebar-link" target="_blank"><span class="icon">🏪</span> View Store</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar">A</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Admin</div>
+          <div class="sidebar-user-role">Administrator</div>
+        </div>
+        <button class="sidebar-logout" data-action="logout">↩</button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button id="sidebar-toggle" class="btn btn-outline btn-sm" style="display:none">☰</button>
+        <span class="admin-topbar-title">User Management</span>
+      </div>
+    </div>
+
+    <div class="admin-content">
+      <div class="admin-table-card">
+        <div class="table-header">
+          <h2>All Users</h2>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Instagram</th>
+                <th>Joined</th>
+                <th>Books Owned</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="users-tbody">
+              <tr><td colspan="6" style="text-align:center;padding:40px;color:#888">Loading users...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- GRANT ACCESS MODAL -->
+<div class="modal-overlay" id="grant-modal" style="display:none" onclick="if(event.target===this)closeGrantModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeGrantModal()">×</button>
+    <h3 class="modal-title">Grant Book Access</h3>
+    <p style="font-size:0.88rem;color:#888;margin-bottom:20px">Granting access to: <strong id="grant-user-name"></strong></p>
+    <input type="hidden" id="grant-user-id">
+    <form id="grant-form">
+      <div class="form-group">
+        <label class="form-label">Select Book</label>
+        <select class="form-control" id="grant-book-select"></select>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:8px">
+        <button type="submit" class="btn btn-gold" style="flex:1">Grant Access</button>
+        <button type="button" class="btn btn-outline" onclick="closeGrantModal()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast-container"></div>
+<script src="/js/admin.js"></script>
+<script>
+if (window.innerWidth <= 768) document.getElementById('sidebar-toggle').style.display = 'inline-flex';
+window.addEventListener('resize', () => {
+  document.getElementById('sidebar-toggle').style.display = window.innerWidth <= 768 ? 'inline-flex' : 'none';
+});
+</script>
+</body>
+</html>

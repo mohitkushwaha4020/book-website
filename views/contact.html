@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Mohit Kushwaha</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="nav-logo">Mohit <span>Kushwaha</span></a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/books">Books</a></li>
+      <li><a href="/#about">About</a></li>
+      <li><a href="/contact" class="active">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="/login" class="btn btn-outline btn-sm nav-login-btn">Login</a>
+      <a href="/signup" class="btn btn-primary btn-sm nav-signup-btn">Sign Up</a>
+      <div class="nav-user-menu" style="display:none">
+        <div class="nav-avatar">M</div>
+        <div class="nav-dropdown">
+          <span class="nav-user-name" style="display:block;padding:8px 14px;font-size:0.85rem;font-weight:600;color:#333;border-bottom:1px solid #f0f0f0;margin-bottom:4px"></span>
+          <a href="/dashboard">📚 Dashboard</a>
+          <a href="/library">🗂 My Library</a>
+          <div class="divider"></div>
+          <a href="#" data-action="logout" style="color:#c62828">↩ Logout</a>
+        </div>
+      </div>
+      <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-nav" id="mobile-nav">
+  <a href="/">Home</a><a href="/books">Books</a><a href="/#about">About</a><a href="/contact">Contact</a>
+  <div class="mobile-divider"></div>
+  <div class="mobile-auth-links"><a href="/login">Login</a><a href="/signup">Sign Up</a></div>
+  <div class="mobile-user-links" style="display:none"><a href="/dashboard">Dashboard</a><a href="/library">My Library</a><a href="#" data-action="logout">Logout</a></div>
+</div>
+
+<div class="page-hero">
+  <h1>Get in Touch</h1>
+  <p>Questions, support, or just want to say hi — we're here</p>
+</div>
+
+<div class="contact-page">
+  <div class="contact-inner">
+    <div class="contact-grid">
+      <div>
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:8px">Reach Out</h2>
+        <p style="color:#888;font-size:0.95rem;line-height:1.65;margin-bottom:28px">For book purchases, access issues, or general inquiries — the fastest way to reach us is Instagram DM.</p>
+
+        <a href="https://instagram.com/mohitkushwaha" class="contact-card" target="_blank" style="display:flex;text-decoration:none">
+          <div class="contact-icon" style="background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366)">📸</div>
+          <div>
+            <h4>Instagram</h4>
+            <p>@mohitkushwaha — DM for fastest response</p>
+          </div>
+        </a>
+
+        <a href="https://wa.me/919999999999" class="contact-card" target="_blank" style="display:flex;text-decoration:none">
+          <div class="contact-icon" style="background:#25D366">💬</div>
+          <div>
+            <h4>WhatsApp</h4>
+            <p>+91 99999 99999 — Message us anytime</p>
+          </div>
+        </a>
+
+        <a href="mailto:hello@mohitkushwaha.com" class="contact-card" style="display:flex;text-decoration:none">
+          <div class="contact-icon" style="background:#c9a96e">✉</div>
+          <div>
+            <h4>Email</h4>
+            <p>hello@mohitkushwaha.com</p>
+          </div>
+        </a>
+
+        <div style="background:#f8f8f8;border-radius:12px;padding:20px;margin-top:8px">
+          <h4 style="font-size:0.9rem;font-weight:600;margin-bottom:10px;color:#333">Response Time</h4>
+          <p style="font-size:0.85rem;color:#666;line-height:1.6">📱 Instagram DM: Usually within a few hours<br>✉️ Email: Within 24 hours<br>💬 WhatsApp: Within 12 hours</p>
+        </div>
+      </div>
+
+      <div>
+        <div style="background:#fff;border-radius:20px;padding:36px;border:1px solid #e8e8e8;box-shadow:0 4px 20px rgba(0,0,0,0.06)">
+          <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:6px">Send a Message</h3>
+          <p style="color:#888;font-size:0.88rem;margin-bottom:24px">We'll get back to you as soon as possible</p>
+
+          <form id="contact-form">
+            <div class="form-group">
+              <label class="form-label">Your Name</label>
+              <input type="text" class="form-control" placeholder="Full name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-control" placeholder="your@email.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Subject</label>
+              <select class="form-control">
+                <option value="">Select a subject</option>
+                <option>Payment Issue</option>
+                <option>Book Access Problem</option>
+                <option>Reading Issue</option>
+                <option>General Inquiry</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Message</label>
+              <textarea class="form-control" rows="4" placeholder="Tell us how we can help..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer style="background:#0a0a0a;color:rgba(255,255,255,0.5);padding:28px clamp(16px,5vw,60px);text-align:center;font-size:0.85rem;margin-top:60px">
+  © 2024 Mohit Kushwaha — <a href="/" style="color:#c9a96e">Home</a> · <a href="/books" style="color:#c9a96e">Books</a>
+</footer>
+
+<div class="toast-container"></div>
+<script src="/js/main.js"></script>
+<script>
+document.getElementById('contact-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  if (typeof showToast === 'function') showToast("Message sent! We'll get back to you soon.", 'success');
+  this.reset();
+});
+</script>
+</body>
+</html>

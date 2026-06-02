@@ -1,0 +1,9 @@
+node_modules/
+.env
+database/bookstore.db
+database/bookstore.db-shm
+database/bookstore.db-wal
+uploads/screenshots/
+uploads/covers/
+pdfs/
+*.log

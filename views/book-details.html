@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Details — Mohit Kushwaha</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .review-item { padding: 20px 0; border-bottom: 1px solid #f0f0f0; }
+    .review-item:last-child { border-bottom: none; }
+    .review-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .review-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg,#c9a96e,#a07840); color: #000; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.88rem; flex-shrink: 0; }
+    .review-name { font-weight: 600; font-size: 0.9rem; color: #333; }
+    .review-text { font-size: 0.9rem; color: #666; line-height: 1.6; margin-top: 6px; }
+    .divider-line { height: 1px; background: #f0f0f0; margin: 36px 0; }
+    .review-form-wrap { background: #f8f8f8; border-radius: 12px; padding: 24px; margin-top: 24px; }
+    .star-input { display: flex; gap: 6px; margin-bottom: 16px; }
+    .star-input span { font-size: 1.6rem; cursor: pointer; color: #ddd; transition: 0.15s; line-height: 1; }
+    .star-input span.active { color: #c9a96e; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar scrolled" id="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="nav-logo">Mohit <span>Kushwaha</span></a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/books" class="active">Books</a></li>
+      <li><a href="/#about">About</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="/login" class="btn btn-outline btn-sm nav-login-btn">Login</a>
+      <a href="/signup" class="btn btn-primary btn-sm nav-signup-btn">Sign Up</a>
+      <div class="nav-user-menu" style="display:none">
+        <div class="nav-avatar">M</div>
+        <div class="nav-dropdown">
+          <span class="nav-user-name" style="display:block;padding:8px 14px;font-size:0.85rem;font-weight:600;color:#333;border-bottom:1px solid #f0f0f0;margin-bottom:4px"></span>
+          <a href="/dashboard">📚 Dashboard</a>
+          <a href="/library">🗂 My Library</a>
+          <div class="divider"></div>
+          <a href="#" data-action="logout" style="color:#c62828">↩ Logout</a>
+        </div>
+      </div>
+      <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-nav" id="mobile-nav">
+  <a href="/">Home</a><a href="/books">Books</a><a href="/#about">About</a><a href="/contact">Contact</a>
+  <div class="mobile-divider"></div>
+  <div class="mobile-auth-links"><a href="/login">Login</a><a href="/signup">Sign Up</a></div>
+  <div class="mobile-user-links" style="display:none"><a href="/dashboard">Dashboard</a><a href="/library">My Library</a><a href="#" data-action="logout">Logout</a></div>
+</div>
+
+<div class="book-detail-page">
+  <div class="book-detail-inner" id="book-detail-content">
+    <a href="/books" style="display:inline-flex;align-items:center;gap:6px;font-size:0.88rem;color:#888;margin-bottom:32px;transition:0.2s" onmouseover="this.style.color='#c9a96e'" onmouseout="this.style.color='#888'">← Back to Books</a>
+
+    <div class="book-detail-grid">
+      <div class="book-detail-cover-wrap">
+        <div class="book-detail-cover">
+          <img src="/images/placeholder.svg" alt="Book Cover" id="book-cover" onerror="this.src='/images/placeholder.svg'">
+        </div>
+        <div style="margin-top:20px;display:flex;flex-direction:column;gap:10px">
+          <a href="#" id="buy-now-btn" class="btn btn-primary btn-full btn-lg">Buy Now</a>
+          <a href="/books" class="btn btn-outline btn-full">Browse More Books</a>
+        </div>
+      </div>
+
+      <div>
+        <div id="book-category" style="font-size:0.75rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#c9a96e;margin-bottom:10px">Fiction</div>
+        <h1 id="book-title" style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3vw,2.4rem);margin-bottom:8px;line-height:1.2">Loading...</h1>
+        <p style="color:#888;font-size:0.95rem;margin-bottom:16px">by <span id="book-author" style="color:#333;font-weight:500">Mohit Kushwaha</span></p>
+
+        <div id="book-rating" class="star-rating" style="margin-bottom:20px;font-size:1rem"></div>
+
+        <div class="book-detail-price">₹<span id="book-price">—</span></div>
+
+        <div class="divider-line"></div>
+
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:12px">About this Book</h3>
+        <p id="book-description" style="color:#555;line-height:1.85;font-size:0.97rem"></p>
+
+        <div class="book-detail-meta" style="margin-top:28px">
+          <div class="book-meta-item">
+            <span class="book-meta-label">Pages</span>
+            <span class="book-meta-value" id="book-pages">—</span>
+          </div>
+          <div class="book-meta-item">
+            <span class="book-meta-label">Genre</span>
+            <span class="book-meta-value" id="book-genre">—</span>
+          </div>
+          <div class="book-meta-item">
+            <span class="book-meta-label">Author</span>
+            <span class="book-meta-value">Mohit Kushwaha</span>
+          </div>
+          <div class="book-meta-item">
+            <span class="book-meta-label">Format</span>
+            <span class="book-meta-value">Online Reading</span>
+          </div>
+        </div>
+
+        <div class="divider-line"></div>
+
+        <!-- REVIEWS -->
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:20px">Reader Reviews</h3>
+        <div id="reviews-list"></div>
+
+        <!-- SUBMIT REVIEW -->
+        <div class="review-form-wrap" id="review-form-wrap" style="display:none">
+          <h4 style="font-size:0.95rem;font-weight:600;margin-bottom:14px">Write a Review</h4>
+          <div class="star-input" id="star-input">
+            <span data-val="1">★</span><span data-val="2">★</span><span data-val="3">★</span>
+            <span data-val="4">★</span><span data-val="5">★</span>
+          </div>
+          <textarea class="form-control" id="review-text" placeholder="Share your thoughts about this book..." rows="3" style="margin-bottom:12px"></textarea>
+          <button class="btn btn-primary" id="submit-review-btn">Submit Review</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer style="background:#0a0a0a;color:rgba(255,255,255,0.5);padding:28px clamp(16px,5vw,60px);text-align:center;font-size:0.85rem;margin-top:60px">
+  © 2024 Mohit Kushwaha — <a href="/" style="color:#c9a96e">Home</a> · <a href="/books" style="color:#c9a96e">Books</a>
+</footer>
+
+<div class="toast-container"></div>
+<script src="/js/main.js"></script>
+<script>
+// Star input
+let selectedRating = 0;
+const stars = document.querySelectorAll('.star-input span');
+stars.forEach(s => {
+  s.addEventListener('mouseover', () => { stars.forEach((x, i) => x.classList.toggle('active', i < s.dataset.val)); });
+  s.addEventListener('mouseout', () => { stars.forEach((x, i) => x.classList.toggle('active', i < selectedRating)); });
+  s.addEventListener('click', () => { selectedRating = parseInt(s.dataset.val); stars.forEach((x, i) => x.classList.toggle('active', i < selectedRating)); });
+});
+document.querySelector('.star-input').addEventListener('mouseleave', () => {
+  stars.forEach((x, i) => x.classList.toggle('active', i < selectedRating));
+});
+
+// Show review form if logged in & has access
+const token = localStorage.getItem('mk_token');
+if (token) {
+  document.getElementById('review-form-wrap').style.display = 'block';
+}
+
+// Submit review
+document.getElementById('submit-review-btn') && document.getElementById('submit-review-btn').addEventListener('click', async () => {
+  if (!selectedRating) { alert('Please select a rating.'); return; }
+  const text = document.getElementById('review-text').value.trim();
+  const bookId = window.location.pathname.split('/').pop();
+  try {
+    const res = await fetch(`/api/reviews/${bookId}`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rating: selectedRating, review_text: text })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    if (typeof showToast === 'function') showToast('Review submitted!', 'success');
+    document.getElementById('review-form-wrap').style.display = 'none';
+  } catch(e) { if (typeof showToast === 'function') showToast(e.message, 'error'); }
+});
+
+// Set genre same as category
+setTimeout(() => {
+  const cat = document.getElementById('book-category').textContent;
+  const genreEl = document.getElementById('book-genre');
+  if (genreEl && cat) genreEl.textContent = cat;
+}, 600);
+</script>
+</body>
+</html>

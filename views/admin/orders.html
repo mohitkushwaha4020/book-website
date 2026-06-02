@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orders — Admin</title>
+  <link rel="stylesheet" href="/css/admin.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="admin-layout">
+
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">Mohit <span>Kushwaha</span></div>
+      <div class="sidebar-sub">Admin Panel</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Overview</div>
+      <a href="/admin" class="sidebar-link"><span class="icon">📊</span> Dashboard</a>
+      <div class="nav-section-label">Management</div>
+      <a href="/admin/orders" class="sidebar-link active"><span class="icon">📦</span> Orders</a>
+      <a href="/admin/books" class="sidebar-link"><span class="icon">📚</span> Books</a>
+      <a href="/admin/users" class="sidebar-link"><span class="icon">👥</span> Users</a>
+      <div class="nav-section-label">Store</div>
+      <a href="/" class="sidebar-link" target="_blank"><span class="icon">🏪</span> View Store</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar">A</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Admin</div>
+          <div class="sidebar-user-role">Administrator</div>
+        </div>
+        <button class="sidebar-logout" data-action="logout">↩</button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button id="sidebar-toggle" class="btn btn-outline btn-sm" style="display:none">☰</button>
+        <span class="admin-topbar-title">Orders Management</span>
+      </div>
+      <div class="admin-topbar-right">
+        <div class="filter-bar">
+          <select class="filter-select" id="status-filter">
+            <option value="all">All Orders</option>
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-content">
+      <div class="admin-table-card">
+        <div class="table-header">
+          <h2>All Orders</h2>
+          <span id="orders-count" style="font-size:0.82rem;color:#888"></span>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Order #</th>
+                <th>Customer</th>
+                <th>Book</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Payment Proof</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="orders-tbody">
+              <tr><td colspan="8" style="text-align:center;padding:40px;color:#888">Loading orders...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast-container"></div>
+<script src="/js/admin.js"></script>
+<script>
+if (window.innerWidth <= 768) document.getElementById('sidebar-toggle').style.display = 'inline-flex';
+window.addEventListener('resize', () => {
+  document.getElementById('sidebar-toggle').style.display = window.innerWidth <= 768 ? 'inline-flex' : 'none';
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Library — Mohit Kushwaha</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar scrolled" id="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="nav-logo">Mohit <span>Kushwaha</span></a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/books">Books</a></li>
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/library" class="active">My Library</a></li>
+    </ul>
+    <div class="nav-actions">
+      <div class="nav-user-menu">
+        <div class="nav-avatar">M</div>
+        <div class="nav-dropdown">
+          <span class="nav-user-name" style="display:block;padding:8px 14px;font-size:0.85rem;font-weight:600;color:#333;border-bottom:1px solid #f0f0f0;margin-bottom:4px"></span>
+          <a href="/dashboard">📚 Dashboard</a>
+          <a href="/library">🗂 My Library</a>
+          <div class="divider"></div>
+          <a href="#" data-action="logout" style="color:#c62828">↩ Logout</a>
+        </div>
+      </div>
+      <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-nav" id="mobile-nav">
+  <a href="/">Home</a><a href="/books">Books</a><a href="/dashboard">Dashboard</a><a href="/library">My Library</a>
+  <div class="mobile-divider"></div>
+  <a href="#" data-action="logout">Logout</a>
+</div>
+
+<div class="dashboard-page">
+  <div class="dashboard-inner">
+    <div class="dashboard-header">
+      <h1>My Library</h1>
+      <p>Your purchased books — read anytime, anywhere</p>
+    </div>
+
+    <!-- Library Grid -->
+    <div id="library-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:24px">
+      <div class="skeleton" style="height:300px;border-radius:12px"></div>
+      <div class="skeleton" style="height:300px;border-radius:12px"></div>
+      <div class="skeleton" style="height:300px;border-radius:12px"></div>
+    </div>
+
+    <!-- Empty State -->
+    <div id="library-empty" style="display:none;text-align:center;padding:80px 20px">
+      <div style="font-size:4rem;margin-bottom:20px">📖</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:#333;margin-bottom:12px">Your library is empty</h2>
+      <p style="color:#888;margin-bottom:28px;max-width:360px;margin-left:auto;margin-right:auto">Purchase a book and it will appear here after payment verification.</p>
+      <a href="/books" class="btn btn-primary btn-lg">Browse Books</a>
+    </div>
+  </div>
+</div>
+
+<footer style="background:#0a0a0a;color:rgba(255,255,255,0.5);padding:28px clamp(16px,5vw,60px);text-align:center;font-size:0.85rem;margin-top:60px">
+  © 2024 Mohit Kushwaha — <a href="/" style="color:#c9a96e">Home</a> · <a href="/books" style="color:#c9a96e">Books</a>
+</footer>
+
+<div class="toast-container"></div>
+<script src="/js/dashboard.js"></script>
+</body>
+</html>

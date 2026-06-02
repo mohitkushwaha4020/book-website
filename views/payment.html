@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Payment — Mohit Kushwaha</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .step-bar { display:flex; gap:0; margin-bottom:36px; }
+    .step { flex:1; text-align:center; padding:10px 0; font-size:0.78rem; font-weight:600; position:relative; color:#bbb; }
+    .step.active { color:#c9a96e; }
+    .step.done { color:#2e7d32; }
+    .step::after { content:''; position:absolute; bottom:0; left:0; right:0; height:3px; background:#e0e0e0; border-radius:2px; }
+    .step.active::after { background:#c9a96e; }
+    .step.done::after { background:#2e7d32; }
+    .order-summary-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #f0f0f0; font-size:0.9rem; }
+    .order-summary-row:last-child { border:none; font-weight:700; font-size:1rem; }
+    .instruction-step { display:flex; gap:12px; align-items:flex-start; margin-bottom:14px; }
+    .instruction-num { width:26px; height:26px; border-radius:50%; background:#c9a96e; color:#000; font-weight:700; font-size:0.78rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+    .instruction-text { font-size:0.88rem; color:#555; line-height:1.5; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar scrolled">
+  <div class="navbar-inner">
+    <a href="/" class="nav-logo">Mohit <span>Kushwaha</span></a>
+    <div class="nav-actions">
+      <a href="/books" class="btn btn-outline btn-sm">← Back to Books</a>
+    </div>
+  </div>
+</nav>
+
+<div class="payment-page">
+  <div class="payment-inner">
+    <div style="margin-bottom:28px">
+      <h1 style="font-family:'Playfair Display',serif;font-size:1.8rem;margin-bottom:6px">Complete Your Purchase</h1>
+      <p style="color:#888;font-size:0.95rem">Make payment via UPI, then submit your details below for access</p>
+    </div>
+
+    <div class="step-bar">
+      <div class="step done">1. Select Book</div>
+      <div class="step active">2. Payment</div>
+      <div class="step">3. Access</div>
+    </div>
+
+    <div class="payment-grid">
+      <!-- LEFT: UPI & QR -->
+      <div>
+        <div class="payment-card" style="margin-bottom:20px">
+          <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:6px">Pay via UPI</h3>
+          <p style="font-size:0.85rem;color:#888;margin-bottom:0">Scan QR or use the UPI ID below</p>
+
+          <div class="qr-placeholder">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="4" width="24" height="24" rx="2" stroke="#ccc" stroke-width="2"/>
+              <rect x="9" y="9" width="14" height="14" rx="1" fill="#ddd"/>
+              <rect x="36" y="4" width="24" height="24" rx="2" stroke="#ccc" stroke-width="2"/>
+              <rect x="41" y="9" width="14" height="14" rx="1" fill="#ddd"/>
+              <rect x="4" y="36" width="24" height="24" rx="2" stroke="#ccc" stroke-width="2"/>
+              <rect x="9" y="41" width="14" height="14" rx="1" fill="#ddd"/>
+              <rect x="36" y="36" width="8" height="8" rx="1" fill="#ddd"/>
+              <rect x="48" y="36" width="8" height="8" rx="1" fill="#ddd"/>
+              <rect x="42" y="48" width="14" height="12" rx="1" fill="#ddd"/>
+            </svg>
+            <span style="font-size:0.8rem;color:#bbb">Upload your own QR<br>in Admin Panel</span>
+          </div>
+
+          <div class="upi-id-box">
+            <div>
+              <div style="font-size:0.72rem;color:#888;margin-bottom:3px;letter-spacing:0.05em;text-transform:uppercase">UPI ID</div>
+              <span id="upi-id">mohitkushwaha@upi</span>
+            </div>
+            <button class="copy-btn" onclick="copyUPI()">Copy</button>
+          </div>
+        </div>
+
+        <div class="payment-card">
+          <h4 style="font-size:0.9rem;font-weight:600;margin-bottom:14px">How it works</h4>
+          <div class="instruction-step">
+            <div class="instruction-num">1</div>
+            <div class="instruction-text">Scan the QR code or copy the UPI ID and complete payment in your UPI app</div>
+          </div>
+          <div class="instruction-step">
+            <div class="instruction-num">2</div>
+            <div class="instruction-text">Take a screenshot of the successful payment confirmation</div>
+          </div>
+          <div class="instruction-step">
+            <div class="instruction-num">3</div>
+            <div class="instruction-text">Fill in your details and upload the screenshot in the form</div>
+          </div>
+          <div class="instruction-step">
+            <div class="instruction-num">4</div>
+            <div class="instruction-text">Access will be granted within a few hours after verification</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Form -->
+      <div class="payment-card">
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:6px">Your Details</h3>
+        <p style="font-size:0.85rem;color:#888;margin-bottom:24px">Fill in your info and upload payment proof</p>
+
+        <!-- Order Summary -->
+        <div style="background:#f8f8f8;border-radius:10px;padding:16px;margin-bottom:24px" id="order-summary">
+          <div style="font-size:0.75rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#888;margin-bottom:10px">Order Summary</div>
+          <div class="order-summary-row">
+            <span id="summary-title" style="color:#333">Loading book...</span>
+            <span id="summary-price" style="font-weight:600">—</span>
+          </div>
+          <div class="order-summary-row">
+            <span style="color:#888">Format</span>
+            <span style="color:#555">Online Access</span>
+          </div>
+          <div class="order-summary-row">
+            <span>Total</span>
+            <span id="summary-total" style="color:#c9a96e">—</span>
+          </div>
+        </div>
+
+        <form id="payment-form" enctype="multipart/form-data">
+          <input type="hidden" id="book-id-input">
+
+          <div class="form-group">
+            <label class="form-label">Full Name *</label>
+            <input type="text" class="form-control" id="full-name" placeholder="Your full name" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email Address *</label>
+            <input type="email" class="form-control" id="email-input" placeholder="your@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Instagram Username</label>
+            <input type="text" class="form-control" id="instagram-input" placeholder="@yourusername">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Payment Screenshot *</label>
+            <div class="upload-area" id="upload-area" onclick="document.getElementById('screenshot-file').click()">
+              <div class="upload-icon">📎</div>
+              <p><span>Click to upload</span> or drag & drop</p>
+              <p style="font-size:0.78rem;color:#bbb;margin-top:4px">JPG, PNG up to 5MB</p>
+            </div>
+            <input type="file" id="screenshot-file" accept="image/*" style="display:none">
+            <div id="file-preview" style="display:none;margin-top:10px">
+              <img id="preview-img" style="max-height:120px;border-radius:8px;border:1px solid #e0e0e0">
+              <p id="file-name" style="font-size:0.78rem;color:#888;margin-top:4px"></p>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full btn-lg" id="submit-btn">
+            Submit Payment Details
+          </button>
+          <p style="font-size:0.78rem;color:#bbb;text-align:center;margin-top:12px">Access granted within a few hours after verification</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container"></div>
+<script src="/js/main.js"></script>
+<script>
+const token = localStorage.getItem('mk_token');
+const user = (() => { try { return JSON.parse(localStorage.getItem('mk_user')); } catch { return null; } })();
+const params = new URLSearchParams(window.location.search);
+const bookId = params.get('book');
+
+if (!token) { window.location.href = '/login?redirect=' + encodeURIComponent(window.location.href); }
+if (!bookId) { window.location.href = '/books'; }
+
+// Pre-fill user details
+if (user) {
+  document.getElementById('full-name').value = user.name || '';
+  document.getElementById('email-input').value = user.email || '';
+  if (user.instagram) document.getElementById('instagram-input').value = user.instagram;
+}
+
+// Load book info
+fetch(`/api/books/${bookId}`, { headers: { Authorization: `Bearer ${token}` } })
+  .then(r => r.json()).then(data => {
+    if (data.book) {
+      document.getElementById('summary-title').textContent = data.book.title;
+      document.getElementById('summary-price').textContent = '₹' + data.book.price;
+      document.getElementById('summary-total').textContent = '₹' + data.book.price;
+      document.getElementById('book-id-input').value = data.book.id;
+      document.title = `Buy ${data.book.title} — Mohit Kushwaha`;
+    }
+  }).catch(() => {});
+
+// File upload preview
+document.getElementById('screenshot-file').addEventListener('change', function() {
+  const file = this.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('preview-img').src = e.target.result;
+    document.getElementById('file-name').textContent = file.name;
+    document.getElementById('file-preview').style.display = 'block';
+    document.getElementById('upload-area').style.borderColor = '#c9a96e';
+  };
+  reader.readAsDataURL(file);
+});
+
+// Drag & drop
+const uploadArea = document.getElementById('upload-area');
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('drag-over'); });
+uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag-over'));
+uploadArea.addEventListener('drop', e => {
+  e.preventDefault(); uploadArea.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) {
+    const dt = new DataTransfer(); dt.items.add(file);
+    document.getElementById('screenshot-file').files = dt.files;
+    document.getElementById('screenshot-file').dispatchEvent(new Event('change'));
+  }
+});
+
+// Copy UPI
+function copyUPI() {
+  navigator.clipboard.writeText('mohitkushwaha@upi').then(() => {
+    if (typeof showToast === 'function') showToast('UPI ID copied!', 'success');
+  });
+}
+
+// Submit
+document.getElementById('payment-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const screenshot = document.getElementById('screenshot-file').files[0];
+  if (!screenshot) { if (typeof showToast === 'function') showToast('Please upload payment screenshot', 'error'); return; }
+
+  const fd = new FormData();
+  fd.append('book_id', document.getElementById('book-id-input').value);
+  fd.append('payment_screenshot', screenshot);
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true; btn.textContent = 'Submitting...';
+
+  try {
+    const res = await fetch('/api/orders', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: fd
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    window.location.href = '/payment-success';
+  } catch(err) {
+    if (typeof showToast === 'function') showToast(err.message || 'Submission failed. Please try again.', 'error');
+    btn.disabled = false; btn.textContent = 'Submit Payment Details';
+  }
+});
+</script>
+</body>
+</html>
