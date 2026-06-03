@@ -7,11 +7,23 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// On Render: use persistent disk path for uploads and pdfs
+// Disk is mounted at /opt/render/project/src/database
+// We store uploads + pdfs inside that persistent disk
+const IS_PROD = process.env.NODE_ENV === 'production';
+const PERSISTENT_BASE = IS_PROD ? '/opt/render/project/src/database' : __dirname;
+
 // Ensure required directories exist
-['uploads/covers', 'uploads/screenshots', 'pdfs'].forEach(dir => {
-  const fullPath = path.join(__dirname, dir);
-  if (!fs.existsSync(fullPath)) fs.mkdirSync(fullPath, { recursive: true });
-});
+const dirs = [
+  path.join(__dirname, 'public'),
+  path.join(PERSISTENT_BASE, 'uploads/covers'),
+  path.join(PERSISTENT_BASE, 'uploads/screenshots'),
+  path.join(PERSISTENT_BASE, 'pdfs'),
+];
+dirs.forEach(dir => { if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true }); });
+
+// Export paths for routes
+app.locals.PERSISTENT_BASE = PERSISTENT_BASE;
 
 // Middleware
 app.use(cors());
@@ -20,7 +32,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(PERSISTENT_BASE, 'uploads')));
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));

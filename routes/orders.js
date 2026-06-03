@@ -6,11 +6,14 @@ const fs = require('fs');
 const db = require('../database/db');
 const auth = require('../middleware/auth');
 
-const screenshotsDir = path.join(__dirname, '..', 'uploads', 'screenshots');
+const IS_PROD = process.env.NODE_ENV === 'production';
+const PERSISTENT_BASE = IS_PROD ? '/opt/render/project/src/database' : path.join(__dirname, '..');
+
+const screenshotsDir = path.join(PERSISTENT_BASE, 'uploads', 'screenshots');
 if (!fs.existsSync(screenshotsDir)) fs.mkdirSync(screenshotsDir, { recursive: true });
 
 const storage = multer.diskStorage({
-  destination: screenshotsDir,
+  destination: (req, file, cb) => cb(null, screenshotsDir),
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname);
     cb(null, `screenshot_${Date.now()}_${Math.random().toString(36).substr(2,6)}${ext}`);

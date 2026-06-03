@@ -6,8 +6,8 @@ const fs = require('fs');
 const db = require('../database/db');
 const adminAuth = require('../middleware/admin');
 
-const coversDir = path.join(__dirname, '..', 'uploads', 'covers');
-const pdfsDir = path.join(__dirname, '..', 'pdfs');
+const coversDir = path.join(process.env.NODE_ENV === 'production' ? '/opt/render/project/src/database' : path.join(__dirname, '..'), 'uploads', 'covers');
+const pdfsDir = path.join(process.env.NODE_ENV === 'production' ? '/opt/render/project/src/database' : path.join(__dirname, '..'), 'pdfs');
 [coversDir, pdfsDir].forEach(d => { if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true }); });
 
 const mixedUpload = multer({

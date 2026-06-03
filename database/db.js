@@ -3,10 +3,21 @@ const bcrypt = require('bcryptjs');
 const path = require('path');
 const fs = require('fs');
 
-const DB_PATH = path.join(__dirname, 'bookstore.db');
+// Render pe persistent disk ka path: /opt/render/project/src/database
+// Local pe: ./database/bookstore.db
+const DB_DIR = process.env.NODE_ENV === 'production'
+  ? path.join('/opt/render/project/src/database')
+  : path.join(__dirname);
+
+// Ensure directory exists
+if (!fs.existsSync(DB_DIR)) fs.mkdirSync(DB_DIR, { recursive: true });
+
+const DB_PATH = path.join(DB_DIR, 'bookstore.db');
+console.log('DB Path:', DB_PATH);
+
 const db = new sqlite3.Database(DB_PATH, err => {
   if (err) console.error('DB open error:', err.message);
-  else console.log('Database connected.');
+  else console.log('Database connected:', DB_PATH);
 });
 
 db.run('PRAGMA foreign_keys = ON');

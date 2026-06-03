@@ -43,7 +43,8 @@ router.get('/:id/pdf', auth, async (req, res) => {
     }
     const book = await db.getAsync('SELECT pdf_file, title FROM books WHERE id = ?', [req.params.id]);
     if (!book || !book.pdf_file) return res.status(404).json({ error: 'PDF not available yet. Please check back later.' });
-    const pdfPath = path.join(__dirname, '..', 'pdfs', book.pdf_file);
+    const pdfBase = process.env.NODE_ENV === 'production' ? '/opt/render/project/src/database' : path.join(__dirname, '..');
+    const pdfPath = path.join(pdfBase, 'pdfs', book.pdf_file);
     if (!fs.existsSync(pdfPath)) return res.status(404).json({ error: 'PDF file not found on server.' });
     const stat = fs.statSync(pdfPath);
     res.setHeader('Content-Type', 'application/pdf');
