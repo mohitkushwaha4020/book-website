@@ -6,17 +6,26 @@
   <title>Book Details — Mohit Kushwaha</title>
   <link rel="stylesheet" href="/css/style.css">
   <style>
-    .review-item { padding: 20px 0; border-bottom: 1px solid #f0f0f0; }
-    .review-item:last-child { border-bottom: none; }
-    .review-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-    .review-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg,#c9a96e,#a07840); color: #000; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.88rem; flex-shrink: 0; }
-    .review-name { font-weight: 600; font-size: 0.9rem; color: #333; }
-    .review-text { font-size: 0.9rem; color: #666; line-height: 1.6; margin-top: 6px; }
-    .divider-line { height: 1px; background: #f0f0f0; margin: 36px 0; }
-    .review-form-wrap { background: #f8f8f8; border-radius: 12px; padding: 24px; margin-top: 24px; }
-    .star-input { display: flex; gap: 6px; margin-bottom: 16px; }
-    .star-input span { font-size: 1.6rem; cursor: pointer; color: #ddd; transition: 0.15s; line-height: 1; }
-    .star-input span.active { color: #c9a96e; }
+    .review-item{padding:18px 0;border-bottom:1px solid #f0f0f0;}
+    .review-item:last-child{border-bottom:none;}
+    .review-header{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+    .review-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#c9a96e,#a07840);color:#000;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0;}
+    .review-name{font-weight:600;font-size:0.88rem;color:#333;}
+    .review-text{font-size:0.88rem;color:#666;line-height:1.6;margin-top:4px;}
+    .divider-line{height:1px;background:#f0f0f0;margin:28px 0;}
+    .review-form-wrap{background:#f8f8f8;border-radius:12px;padding:20px;margin-top:20px;}
+    .star-input{display:flex;gap:8px;margin-bottom:14px;}
+    .star-input span{font-size:1.8rem;cursor:pointer;color:#ddd;transition:0.15s;line-height:1;}
+    .star-input span.active{color:#c9a96e;}
+
+    /* Mobile book detail layout */
+    @media(max-width:768px){
+      .book-detail-page{padding:calc(62px + 16px) 14px 48px;}
+      .back-link{margin-bottom:20px !important;font-size:0.85rem !important;}
+      .book-detail-price{font-size:1.6rem !important;margin:14px 0 !important;}
+      .divider-line{margin:20px 0;}
+      .review-form-wrap{padding:16px;}
+    }
   </style>
 </head>
 <body>
@@ -57,34 +66,35 @@
 
 <div class="book-detail-page">
   <div class="book-detail-inner" id="book-detail-content">
-    <a href="/books" style="display:inline-flex;align-items:center;gap:6px;font-size:0.88rem;color:#888;margin-bottom:32px;transition:0.2s" onmouseover="this.style.color='#c9a96e'" onmouseout="this.style.color='#888'">← Back to Books</a>
+
+    <a href="/books" class="back-link" style="display:inline-flex;align-items:center;gap:6px;font-size:0.88rem;color:#888;margin-bottom:28px;transition:0.2s;text-decoration:none">← Back to Books</a>
 
     <div class="book-detail-grid">
+      <!-- Cover -->
       <div class="book-detail-cover-wrap">
         <div class="book-detail-cover">
           <img src="/images/placeholder.svg" alt="Book Cover" id="book-cover" onerror="this.src='/images/placeholder.svg'">
         </div>
-        <div style="margin-top:20px;display:flex;flex-direction:column;gap:10px">
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px">
           <a href="#" id="buy-now-btn" class="btn btn-primary btn-full btn-lg">Buy Now</a>
-          <a href="/books" class="btn btn-outline btn-full">Browse More Books</a>
+          <a href="/books" class="btn btn-outline btn-full">Browse More</a>
         </div>
       </div>
 
+      <!-- Info -->
       <div>
-        <div id="book-category" style="font-size:0.75rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#c9a96e;margin-bottom:10px">Fiction</div>
-        <h1 id="book-title" style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3vw,2.4rem);margin-bottom:8px;line-height:1.2">Loading...</h1>
-        <p style="color:#888;font-size:0.95rem;margin-bottom:16px">by <span id="book-author" style="color:#333;font-weight:500">Mohit Kushwaha</span></p>
-
-        <div id="book-rating" class="star-rating" style="margin-bottom:20px;font-size:1rem"></div>
-
-        <div class="book-detail-price">₹<span id="book-price">—</span></div>
+        <div id="book-category" style="font-size:0.72rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#c9a96e;margin-bottom:8px">Fiction</div>
+        <h1 id="book-title" style="font-family:'Playfair Display',serif;font-size:clamp(1.5rem,3vw,2.2rem);margin-bottom:6px;line-height:1.2">Loading...</h1>
+        <p style="color:#888;font-size:0.92rem;margin-bottom:14px">by <span id="book-author" style="color:#333;font-weight:500">Mohit Kushwaha</span></p>
+        <div id="book-rating" class="star-rating" style="margin-bottom:16px;font-size:1rem"></div>
+        <div class="book-detail-price" style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:#0a0a0a;margin:16px 0">₹<span id="book-price">—</span></div>
 
         <div class="divider-line"></div>
 
-        <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:12px">About this Book</h3>
-        <p id="book-description" style="color:#555;line-height:1.85;font-size:0.97rem"></p>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:10px">About this Book</h3>
+        <p id="book-description" style="color:#555;line-height:1.8;font-size:0.93rem"></p>
 
-        <div class="book-detail-meta" style="margin-top:28px">
+        <div class="book-detail-meta" style="margin-top:24px">
           <div class="book-meta-item">
             <span class="book-meta-label">Pages</span>
             <span class="book-meta-value" id="book-pages">—</span>
@@ -105,18 +115,16 @@
 
         <div class="divider-line"></div>
 
-        <!-- REVIEWS -->
-        <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:20px">Reader Reviews</h3>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:16px">Reader Reviews</h3>
         <div id="reviews-list"></div>
 
-        <!-- SUBMIT REVIEW -->
         <div class="review-form-wrap" id="review-form-wrap" style="display:none">
-          <h4 style="font-size:0.95rem;font-weight:600;margin-bottom:14px">Write a Review</h4>
+          <h4 style="font-size:0.92rem;font-weight:600;margin-bottom:12px">Write a Review</h4>
           <div class="star-input" id="star-input">
-            <span data-val="1">★</span><span data-val="2">★</span><span data-val="3">★</span>
-            <span data-val="4">★</span><span data-val="5">★</span>
+            <span data-val="1">★</span><span data-val="2">★</span>
+            <span data-val="3">★</span><span data-val="4">★</span><span data-val="5">★</span>
           </div>
-          <textarea class="form-control" id="review-text" placeholder="Share your thoughts about this book..." rows="3" style="margin-bottom:12px"></textarea>
+          <textarea class="form-control" id="review-text" placeholder="Share your thoughts..." rows="3" style="margin-bottom:12px"></textarea>
           <button class="btn btn-primary" id="submit-review-btn">Submit Review</button>
         </div>
       </div>
@@ -124,50 +132,34 @@
   </div>
 </div>
 
-<footer style="background:#0a0a0a;color:rgba(255,255,255,0.5);padding:28px clamp(16px,5vw,60px);text-align:center;font-size:0.85rem;margin-top:60px">
+<footer style="background:#0a0a0a;color:rgba(255,255,255,0.5);padding:24px 16px;text-align:center;font-size:0.82rem;margin-top:48px">
   © 2024 Mohit Kushwaha — <a href="/" style="color:#c9a96e">Home</a> · <a href="/books" style="color:#c9a96e">Books</a>
 </footer>
 
 <div class="toast-container"></div>
 <script src="/js/main.js"></script>
 <script>
-// Star input
 let selectedRating = 0;
 const stars = document.querySelectorAll('.star-input span');
 stars.forEach(s => {
-  s.addEventListener('mouseover', () => { stars.forEach((x, i) => x.classList.toggle('active', i < s.dataset.val)); });
-  s.addEventListener('mouseout', () => { stars.forEach((x, i) => x.classList.toggle('active', i < selectedRating)); });
-  s.addEventListener('click', () => { selectedRating = parseInt(s.dataset.val); stars.forEach((x, i) => x.classList.toggle('active', i < selectedRating)); });
+  s.addEventListener('mouseover', () => stars.forEach((x,i) => x.classList.toggle('active', i < s.dataset.val)));
+  s.addEventListener('mouseout', () => stars.forEach((x,i) => x.classList.toggle('active', i < selectedRating)));
+  s.addEventListener('click', () => { selectedRating = parseInt(s.dataset.val); stars.forEach((x,i) => x.classList.toggle('active', i < selectedRating)); });
 });
-document.querySelector('.star-input').addEventListener('mouseleave', () => {
-  stars.forEach((x, i) => x.classList.toggle('active', i < selectedRating));
-});
-
-// Show review form if logged in & has access
 const token = localStorage.getItem('mk_token');
-if (token) {
-  document.getElementById('review-form-wrap').style.display = 'block';
-}
-
-// Submit review
+if (token) document.getElementById('review-form-wrap').style.display = 'block';
 document.getElementById('submit-review-btn') && document.getElementById('submit-review-btn').addEventListener('click', async () => {
-  if (!selectedRating) { alert('Please select a rating.'); return; }
+  if (!selectedRating) { if(typeof showToast==='function') showToast('Please select a rating','error'); return; }
   const text = document.getElementById('review-text').value.trim();
   const bookId = window.location.pathname.split('/').pop();
   try {
-    const res = await fetch(`/api/reviews/${bookId}`, {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ rating: selectedRating, review_text: text })
-    });
+    const res = await fetch(`/api/reviews/${bookId}`, { method:'POST', headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json'}, body:JSON.stringify({rating:selectedRating,review_text:text}) });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error);
-    if (typeof showToast === 'function') showToast('Review submitted!', 'success');
+    if(typeof showToast==='function') showToast('Review submitted!','success');
     document.getElementById('review-form-wrap').style.display = 'none';
-  } catch(e) { if (typeof showToast === 'function') showToast(e.message, 'error'); }
+  } catch(e) { if(typeof showToast==='function') showToast(e.message,'error'); }
 });
-
-// Set genre same as category
 setTimeout(() => {
   const cat = document.getElementById('book-category').textContent;
   const genreEl = document.getElementById('book-genre');
