@@ -317,7 +317,23 @@ body.dark-mode .bookmark-panel { background: #1e1a18; }
 /* ---- Mobile adjustments ---- */
 @media (max-width: 768px) {
   .toolbar-btn-label { display: none; }
-  .book-title-display { font-size: 0.78rem; }
-  .reader-main { padding: 12px 8px; }
-  .bookmark-panel { width: 85vw; }
+  .book-title-display { font-size: 0.75rem; max-width: 120px; }
+  .reader-toolbar { padding: 0 8px; gap: 6px; height: 50px; }
+  .toolbar-btn { width: 32px; height: 32px; font-size: 0.85rem; }
+  .zoom-display { min-width: 34px; font-size: 0.72rem; }
+  .reader-main { padding: 8px 4px; top: 50px; bottom: 56px; }
+  .reading-progress-bar { top: 50px; }
+  .reader-bottom-bar { height: 56px; gap: 14px; }
+  .nav-btn { width: 36px; height: 36px; font-size: 0.95rem; }
+  .page-input { width: 40px; font-size: 0.82rem; }
+  .bookmark-panel { width: 88vw; }
+}
+
+@media (max-width: 480px) {
+  .reader-toolbar { height: 48px; }
+  .reader-main { top: 48px; bottom: 52px; padding: 6px 2px; }
+  .reading-progress-bar { top: 48px; }
+  .reader-bottom-bar { height: 52px; gap: 10px; }
+  .toolbar-right { gap: 4px; }
+  .toolbar-left { gap: 4px; }
 }

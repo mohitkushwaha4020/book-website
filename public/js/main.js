@@ -44,7 +44,19 @@ function removeToast(toast) {
 function initNavbar() {
   const navbar = document.querySelector('.navbar');
   if (!navbar) return;
-  const onScroll = () => navbar.classList.toggle('scrolled', window.scrollY > 20);
+  const isHomePage = document.querySelector('.hero') !== null;
+  const hamburgerSpans = document.querySelectorAll('.hamburger span');
+
+  const onScroll = () => {
+    const scrolled = window.scrollY > 20;
+    navbar.classList.toggle('scrolled', scrolled);
+    // On home hero page, hamburger switches color on scroll
+    if (isHomePage) {
+      hamburgerSpans.forEach(s => {
+        s.style.background = scrolled ? 'var(--black)' : '#fff';
+      });
+    }
+  };
   window.addEventListener('scroll', onScroll);
   onScroll();
 
