@@ -1,188 +1,204 @@
-const { Pool } = require('pg');
+/**
+ * Database module — Dual mode:
+ * - Production (NODE_ENV=production): PostgreSQL via Supabase
+ * - Development (local): SQLite
+ */
+
 const bcrypt = require('bcryptjs');
+const path = require('path');
+const fs = require('fs');
 
-// Supabase / PostgreSQL connection
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
-});
+const IS_PROD = process.env.NODE_ENV === 'production';
 
-// Promise-based query helpers (same interface used across routes)
-const db = {
-  // Single row
-  getAsync: async (sql, params = []) => {
-    const pgSql = toPostgres(sql);
-    const res = await pool.query(pgSql, params);
-    return res.rows[0] || null;
-  },
-  // Multiple rows
-  allAsync: async (sql, params = []) => {
-    const pgSql = toPostgres(sql);
-    const res = await pool.query(pgSql, params);
-    return res.rows;
-  },
-  // Insert/Update/Delete — returns { lastID, changes }
-  runAsync: async (sql, params = []) => {
-    const pgSql = toPostgres(sql);
-    // For INSERT ... RETURNING id
-    const isInsert = /^\s*INSERT/i.test(sql);
-    const query = isInsert ? pgSql.replace(/;?\s*$/, ' RETURNING id') : pgSql;
-    const res = await pool.query(query, params);
-    return {
-      lastID: res.rows[0] ? res.rows[0].id : null,
-      changes: res.rowCount
-    };
-  },
-  // Raw exec (for CREATE TABLE etc.)
-  execAsync: async (sql) => {
-    await pool.query(sql);
+let db;
+
+if (IS_PROD && process.env.DATABASE_URL) {
+  // ============ POSTGRESQL (Supabase) ============
+  const { Pool } = require('pg');
+  const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  const q = (sql, params = []) => pool.query(sql, params);
+
+  db = {
+    getAsync: async (sql, params = []) => {
+      const { rows } = await pool.query(toPg(sql, params));
+      return rows[0] || null;
+    },
+    allAsync: async (sql, params = []) => {
+      const { rows } = await pool.query(toPg(sql, params));
+      return rows;
+    },
+    runAsync: async (sql, params = []) => {
+      const isInsert = /^\s*INSERT/i.test(sql);
+      let pgq = toPg(sql, params);
+      if (isInsert) pgq.text = pgq.text.replace(/;?\s*$/, ' RETURNING id');
+      const res = await pool.query(pgq);
+      return { lastID: res.rows[0]?.id || null, changes: res.rowCount };
+    },
+    execAsync: async (sql) => { await pool.query(sql); }
+  };
+
+  function toPg(sql, params = []) {
+    let i = 0;
+    const text = sql
+      .replace(/\?/g, () => `$${++i}`)
+      .replace(/INTEGER PRIMARY KEY AUTOINCREMENT/gi, 'SERIAL PRIMARY KEY')
+      .replace(/DATETIME DEFAULT CURRENT_TIMESTAMP/gi, 'TIMESTAMPTZ DEFAULT NOW()')
+      .replace(/DATETIME/gi, 'TIMESTAMPTZ')
+      .replace(/NULLS LAST/gi, 'NULLS LAST');
+    return { text, values: params };
   }
-};
 
-// Convert SQLite syntax → PostgreSQL syntax
-function toPostgres(sql) {
-  return sql
-    // ? → $1, $2, $3 ...
-    .replace(/\?/g, () => {
-      toPostgres._counter = (toPostgres._counter || 0) + 1;
-      return `$${toPostgres._counter}`;
-    })
-    // AUTOINCREMENT → SERIAL (handled in CREATE TABLE)
-    .replace(/INTEGER PRIMARY KEY AUTOINCREMENT/gi, 'SERIAL PRIMARY KEY')
-    // DATETIME DEFAULT CURRENT_TIMESTAMP → TIMESTAMPTZ DEFAULT NOW()
-    .replace(/DATETIME DEFAULT CURRENT_TIMESTAMP/gi, 'TIMESTAMPTZ DEFAULT NOW()')
-    .replace(/DATETIME/gi, 'TIMESTAMPTZ')
-    // ON CONFLICT ... DO UPDATE (SQLite UPSERT — Postgres same syntax mostly)
-    .replace(/NULLS LAST/gi, 'NULLS LAST')
-    // BOOLEAN fields
-    .replace(/INTEGER DEFAULT 0/gi, 'INTEGER DEFAULT 0');
-}
+  // Init PostgreSQL tables
+  (async () => {
+    try {
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS users (
+          id SERIAL PRIMARY KEY, name TEXT NOT NULL, email TEXT UNIQUE NOT NULL,
+          instagram TEXT, password_hash TEXT NOT NULL, is_admin INTEGER DEFAULT 0,
+          created_at TIMESTAMPTZ DEFAULT NOW()
+        );
+        CREATE TABLE IF NOT EXISTS books (
+          id SERIAL PRIMARY KEY, title TEXT NOT NULL, author TEXT NOT NULL DEFAULT 'Mohit Kushwaha',
+          price REAL NOT NULL, description TEXT, pages INTEGER, category TEXT,
+          cover_image TEXT, pdf_file TEXT, is_active INTEGER DEFAULT 1,
+          created_at TIMESTAMPTZ DEFAULT NOW()
+        );
+        CREATE TABLE IF NOT EXISTS orders (
+          id SERIAL PRIMARY KEY, user_id INTEGER NOT NULL REFERENCES users(id),
+          book_id INTEGER NOT NULL REFERENCES books(id), payment_screenshot TEXT,
+          payment_status TEXT DEFAULT 'pending', created_at TIMESTAMPTZ DEFAULT NOW()
+        );
+        CREATE TABLE IF NOT EXISTS reading_progress (
+          id SERIAL PRIMARY KEY, user_id INTEGER NOT NULL REFERENCES users(id),
+          book_id INTEGER NOT NULL REFERENCES books(id), current_page INTEGER DEFAULT 1,
+          total_pages INTEGER DEFAULT 0, last_read TIMESTAMPTZ DEFAULT NOW(),
+          UNIQUE(user_id, book_id)
+        );
+        CREATE TABLE IF NOT EXISTS reviews (
+          id SERIAL PRIMARY KEY, user_id INTEGER NOT NULL REFERENCES users(id),
+          book_id INTEGER NOT NULL REFERENCES books(id), rating INTEGER NOT NULL,
+          review_text TEXT, created_at TIMESTAMPTZ DEFAULT NOW(), UNIQUE(user_id, book_id)
+        );
+        CREATE TABLE IF NOT EXISTS bookmarks (
+          id SERIAL PRIMARY KEY, user_id INTEGER NOT NULL REFERENCES users(id),
+          book_id INTEGER NOT NULL REFERENCES books(id), page_number INTEGER NOT NULL,
+          note TEXT, created_at TIMESTAMPTZ DEFAULT NOW()
+        );
+      `);
 
-// Reset counter before each query (patch toPostgres to use closure)
-const _origGet = db.getAsync;
-const _origAll = db.allAsync;
-const _origRun = db.runAsync;
+      // Seed books
+      const bc = await pool.query('SELECT COUNT(*) as c FROM books');
+      if (parseInt(bc.rows[0].c) === 0) {
+        const books = [
+          ['1000 Miles of Love','Mohit Kushwaha',199,'A breathtaking journey of love that transcends distance and time. Two souls separated by a thousand miles discover that true love knows no boundaries.',280,'Romance','/uploads/covers/1000-miles-of-love.jpg'],
+          ['When Trust Breaks','Mohit Kushwaha',179,'A powerful exploration of betrayal, healing, and the fragile nature of human trust. When the foundation of a relationship shatters, what remains?',240,'Drama','/uploads/covers/when-trust-breaks.jpg'],
+          ['Someone I Love','Mohit Kushwaha',189,'An intimate portrait of love in all its forms — romantic, familial, and self-love. A story about the someone who changes everything.',260,'Romance / Fiction','/uploads/covers/someone-i-love.jpg'],
+          ['The Art of Loneliness: Healing and Becoming','Mohit Kushwaha',219,'In a world more connected than ever, why do so many of us feel profoundly alone? A companion for the solitary journey toward wholeness.',320,'Self-Help','/uploads/covers/art-of-loneliness.jpg'],
+        ];
+        for (const b of books) {
+          await pool.query('INSERT INTO books (title,author,price,description,pages,category,cover_image) VALUES ($1,$2,$3,$4,$5,$6,$7)', b);
+        }
+        console.log('✅ Books seeded (PG)');
+      }
 
-db.getAsync = async (sql, params = []) => {
-  toPostgres._counter = 0;
-  return _origGet(sql, params);
-};
-db.allAsync = async (sql, params = []) => {
-  toPostgres._counter = 0;
-  return _origAll(sql, params);
-};
-db.runAsync = async (sql, params = []) => {
-  toPostgres._counter = 0;
-  return _origRun(sql, params);
-};
-db.execAsync = async (sql) => {
-  await pool.query(sql);
-};
+      // Seed admin
+      const ac = await pool.query('SELECT COUNT(*) as c FROM users WHERE is_admin=1');
+      if (parseInt(ac.rows[0].c) === 0) {
+        const hash = bcrypt.hashSync('Admin@123', 10);
+        await pool.query('INSERT INTO users (name,email,instagram,password_hash,is_admin) VALUES ($1,$2,$3,$4,1)', ['Mohit Kushwaha','admin@mohitkushwaha.com','mohitkushwaha',hash]);
+        console.log('✅ Admin seeded (PG)');
+      }
+      console.log('✅ PostgreSQL ready');
+    } catch (e) { console.error('❌ PG init error:', e.message); }
+  })();
 
-// Initialize tables and seed data
-async function init() {
-  try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        name TEXT NOT NULL,
-        email TEXT UNIQUE NOT NULL,
-        instagram TEXT,
-        password_hash TEXT NOT NULL,
-        is_admin INTEGER DEFAULT 0,
-        created_at TIMESTAMPTZ DEFAULT NOW()
-      );
+} else {
+  // ============ SQLITE (Local Development) ============
+  const sqlite3 = require('sqlite3').verbose();
+  const DB_PATH = path.join(__dirname, 'bookstore.db');
+  const sqliteDb = new sqlite3.Database(DB_PATH, err => {
+    if (err) console.error('SQLite error:', err.message);
+    else console.log('✅ SQLite connected (development)');
+  });
 
-      CREATE TABLE IF NOT EXISTS books (
-        id SERIAL PRIMARY KEY,
-        title TEXT NOT NULL,
-        author TEXT NOT NULL DEFAULT 'Mohit Kushwaha',
-        price REAL NOT NULL,
-        description TEXT,
-        pages INTEGER,
-        category TEXT,
-        cover_image TEXT,
-        pdf_file TEXT,
-        is_active INTEGER DEFAULT 1,
-        created_at TIMESTAMPTZ DEFAULT NOW()
-      );
+  sqliteDb.run('PRAGMA foreign_keys = ON');
+  sqliteDb.run('PRAGMA journal_mode = WAL');
 
-      CREATE TABLE IF NOT EXISTS orders (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER NOT NULL REFERENCES users(id),
-        book_id INTEGER NOT NULL REFERENCES books(id),
-        payment_screenshot TEXT,
-        payment_status TEXT DEFAULT 'pending',
-        created_at TIMESTAMPTZ DEFAULT NOW()
-      );
+  db = {
+    getAsync: (sql, params = []) => new Promise((res, rej) =>
+      sqliteDb.get(sql, params, (e, row) => e ? rej(e) : res(row || null))),
+    allAsync: (sql, params = []) => new Promise((res, rej) =>
+      sqliteDb.all(sql, params, (e, rows) => e ? rej(e) : res(rows))),
+    runAsync: (sql, params = []) => new Promise((res, rej) =>
+      sqliteDb.run(sql, params, function(e) { e ? rej(e) : res({ lastID: this.lastID, changes: this.changes }); })),
+    execAsync: (sql) => new Promise((res, rej) =>
+      sqliteDb.exec(sql, e => e ? rej(e) : res()))
+  };
 
-      CREATE TABLE IF NOT EXISTS reading_progress (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER NOT NULL REFERENCES users(id),
-        book_id INTEGER NOT NULL REFERENCES books(id),
-        current_page INTEGER DEFAULT 1,
-        total_pages INTEGER DEFAULT 0,
-        last_read TIMESTAMPTZ DEFAULT NOW(),
-        UNIQUE(user_id, book_id)
-      );
-
-      CREATE TABLE IF NOT EXISTS reviews (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER NOT NULL REFERENCES users(id),
-        book_id INTEGER NOT NULL REFERENCES books(id),
-        rating INTEGER NOT NULL,
-        review_text TEXT,
-        created_at TIMESTAMPTZ DEFAULT NOW(),
-        UNIQUE(user_id, book_id)
-      );
-
-      CREATE TABLE IF NOT EXISTS bookmarks (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER NOT NULL REFERENCES users(id),
-        book_id INTEGER NOT NULL REFERENCES books(id),
-        page_number INTEGER NOT NULL,
-        note TEXT,
-        created_at TIMESTAMPTZ DEFAULT NOW()
-      );
-    `);
-
-    console.log('✅ Tables ready.');
-
+  // Init SQLite tables
+  db.execAsync(`
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, email TEXT UNIQUE NOT NULL,
+      instagram TEXT, password_hash TEXT NOT NULL, is_admin INTEGER DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE TABLE IF NOT EXISTS books (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL,
+      author TEXT NOT NULL DEFAULT 'Mohit Kushwaha', price REAL NOT NULL,
+      description TEXT, pages INTEGER, category TEXT, cover_image TEXT, pdf_file TEXT,
+      is_active INTEGER DEFAULT 1, created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE TABLE IF NOT EXISTS orders (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, book_id INTEGER NOT NULL,
+      payment_screenshot TEXT, payment_status TEXT DEFAULT 'pending',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id), FOREIGN KEY (book_id) REFERENCES books(id)
+    );
+    CREATE TABLE IF NOT EXISTS reading_progress (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, book_id INTEGER NOT NULL,
+      current_page INTEGER DEFAULT 1, total_pages INTEGER DEFAULT 0,
+      last_read DATETIME DEFAULT CURRENT_TIMESTAMP, UNIQUE(user_id, book_id),
+      FOREIGN KEY (user_id) REFERENCES users(id), FOREIGN KEY (book_id) REFERENCES books(id)
+    );
+    CREATE TABLE IF NOT EXISTS reviews (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, book_id INTEGER NOT NULL,
+      rating INTEGER NOT NULL, review_text TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(user_id, book_id),
+      FOREIGN KEY (user_id) REFERENCES users(id), FOREIGN KEY (book_id) REFERENCES books(id)
+    );
+    CREATE TABLE IF NOT EXISTS bookmarks (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, book_id INTEGER NOT NULL,
+      page_number INTEGER NOT NULL, note TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id), FOREIGN KEY (book_id) REFERENCES books(id)
+    );
+  `).then(async () => {
     // Seed books
-    const bookCount = await pool.query('SELECT COUNT(*) as count FROM books');
-    if (parseInt(bookCount.rows[0].count) === 0) {
+    const bc = await db.getAsync('SELECT COUNT(*) as count FROM books');
+    if (bc.count === 0) {
       const books = [
-        ['1000 Miles of Love', 'Mohit Kushwaha', 199, 'A breathtaking journey of love that transcends distance and time. Two souls separated by a thousand miles discover that true love knows no boundaries. This heartfelt story explores the depths of longing, the beauty of connection, and the courage it takes to follow your heart across the world.', 280, 'Romance', '/uploads/covers/1000-miles-of-love.jpg'],
-        ['When Trust Breaks', 'Mohit Kushwaha', 179, 'A powerful exploration of betrayal, healing, and the fragile nature of human trust. When the foundation of a relationship shatters, what remains? This deeply moving story follows a journey of rebuilding — not just relationships, but the self. A must-read for anyone who has loved and lost.', 240, 'Drama', '/uploads/covers/when-trust-breaks.jpg'],
-        ['Someone I Love', 'Mohit Kushwaha', 189, 'An intimate portrait of love in all its forms — romantic, familial, and self-love. Through beautifully crafted prose, this novel takes you on an emotional odyssey that will make you see the people in your life with new eyes. A story about the someone who changes everything.', 260, 'Romance / Fiction', '/uploads/covers/someone-i-love.jpg'],
-        ['The Art of Loneliness: Healing and Becoming', 'Mohit Kushwaha', 219, 'In a world more connected than ever, why do so many of us feel profoundly alone? This transformative guide invites you to sit with your loneliness, understand it, and ultimately transform it into your greatest strength. Part memoir, part self-help, this book is a companion for the solitary journey toward wholeness.', 320, 'Self-Help', '/uploads/covers/art-of-loneliness.jpg'],
+        ['1000 Miles of Love','Mohit Kushwaha',199,'A breathtaking journey of love that transcends distance and time. Two souls separated by a thousand miles discover that true love knows no boundaries.',280,'Romance','/uploads/covers/1000-miles-of-love.jpg'],
+        ['When Trust Breaks','Mohit Kushwaha',179,'A powerful exploration of betrayal, healing, and the fragile nature of human trust. When the foundation of a relationship shatters, what remains?',240,'Drama','/uploads/covers/when-trust-breaks.jpg'],
+        ['Someone I Love','Mohit Kushwaha',189,'An intimate portrait of love in all its forms — romantic, familial, and self-love. A story about the someone who changes everything.',260,'Romance / Fiction','/uploads/covers/someone-i-love.jpg'],
+        ['The Art of Loneliness: Healing and Becoming','Mohit Kushwaha',219,'In a world more connected than ever, why do so many of us feel profoundly alone? A companion for the solitary journey toward wholeness.',320,'Self-Help','/uploads/covers/art-of-loneliness.jpg'],
       ];
       for (const b of books) {
-        await pool.query(
-          'INSERT INTO books (title, author, price, description, pages, category, cover_image) VALUES ($1,$2,$3,$4,$5,$6,$7)',
-          b
-        );
+        await db.runAsync('INSERT INTO books (title,author,price,description,pages,category,cover_image) VALUES (?,?,?,?,?,?,?)', b);
       }
-      console.log('✅ Books seeded.');
+      console.log('✅ Books seeded (SQLite)');
     }
-
     // Seed admin
-    const adminCount = await pool.query('SELECT COUNT(*) as count FROM users WHERE is_admin = 1');
-    if (parseInt(adminCount.rows[0].count) === 0) {
+    const ac = await db.getAsync('SELECT COUNT(*) as count FROM users WHERE is_admin=1');
+    if (ac.count === 0) {
       const hash = bcrypt.hashSync('Admin@123', 10);
-      await pool.query(
-        'INSERT INTO users (name, email, instagram, password_hash, is_admin) VALUES ($1,$2,$3,$4,1)',
-        ['Mohit Kushwaha', 'admin@mohitkushwaha.com', 'mohitkushwaha', hash]
-      );
-      console.log('✅ Admin seeded.');
+      await db.runAsync('INSERT INTO users (name,email,instagram,password_hash,is_admin) VALUES (?,?,?,?,1)', ['Mohit Kushwaha','admin@mohitkushwaha.com','mohitkushwaha',hash]);
+      console.log('✅ Admin seeded (SQLite)');
     }
-
-    console.log('✅ Database initialized successfully.');
-  } catch (err) {
-    console.error('❌ DB init error:', err.message);
-  }
+    console.log('✅ SQLite ready');
+  }).catch(e => console.error('SQLite init error:', e.message));
 }
-
-init();
 
 module.exports = db;
